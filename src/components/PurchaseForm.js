@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import API from '../api';
+
 function PurchaseForm() {
     const [products, setProducts] = useState([]);
     const [customerName, setCustomerName] = useState('');
@@ -64,8 +65,17 @@ function PurchaseForm() {
     return (
         <div className="d-flex" style={{ fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif` }}>
             <Sidebar />
-            <main className="container mt-5" style={{ marginLeft: '220px' }}>
-                <div className="card p-4 shadow-sm border rounded-3" style={{ maxWidth: '700px' }}>
+            <main className="container-fluid mt-3 mt-md-5 px-3 px-md-4" style={{
+                marginLeft: '0',
+                transition: 'margin-left 0.3s',
+                width: '100%',
+                maxWidth: '100%'
+            }}>
+                <div className="card p-3 p-md-4 shadow-sm border rounded-3" style={{
+                    maxWidth: '700px',
+                    margin: '0 auto',
+                    width: '100%'
+                }}>
                     <h3 className="mb-4 text-center text-primary">Make a Purchase</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -84,8 +94,8 @@ function PurchaseForm() {
 
                         <h5 className="text-secondary mb-3">Purchase Items</h5>
                         {items.map((item, index) => (
-                            <div key={index} className="row mb-3 align-items-end">
-                                <div className="col-md-6">
+                            <div key={index} className="row mb-3 g-2 align-items-end">
+                                <div className="col-12 col-md-6">
                                     <label className="form-label">Product</label>
                                     <select
                                         className="form-select"
@@ -101,32 +111,43 @@ function PurchaseForm() {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-8 col-md-3">
                                     <label className="form-label">Quantity</label>
                                     <input
                                         type="number"
                                         className="form-control"
                                         min="1"
                                         value={item.quantity}
-                                        onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                                        onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value) || 1)}
                                         required
                                     />
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-4 col-md-3">
                                     {items.length > 1 && (
-                                        <button type="button" className="btn btn-danger" onClick={() => handleRemoveItem(index)}>
-                                            &times;
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger w-100"
+                                            onClick={() => handleRemoveItem(index)}
+                                        >
+                                            Remove
                                         </button>
                                     )}
                                 </div>
                             </div>
                         ))}
 
-                        <div className="d-flex justify-content-between mt-3">
-                            <button type="button" className="btn btn-outline-primary" onClick={handleAddItem}>
+                        <div className="d-flex flex-column flex-md-row justify-content-between mt-3 gap-2">
+                            <button
+                                type="button"
+                                className="btn btn-outline-primary order-2 order-md-1"
+                                onClick={handleAddItem}
+                            >
                                 + Add Another Product
                             </button>
-                            <button type="submit" className="btn btn-primary fw-semibold">
+                            <button
+                                type="submit"
+                                className="btn btn-primary fw-semibold order-1 order-md-2"
+                            >
                                 Submit Purchase
                             </button>
                         </div>
