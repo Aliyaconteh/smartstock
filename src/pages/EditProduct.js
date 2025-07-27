@@ -128,9 +128,9 @@ function EditProduct() {
 
                             <div className="row g-2">
                                 <div className="col-12 col-md-6 mb-3">
-                                    <label className="form-label text-muted">Price ($)</label>
+                                    <label className="form-label text-muted">Price (SLL)</label>
                                     <div className="input-group">
-                                        <span className="input-group-text">$</span>
+                                        <span className="input-group-text">SLL</span>
                                         <input
                                             type="number"
                                             className="form-control"
@@ -164,20 +164,26 @@ function EditProduct() {
                                         type="date"
                                         className="form-control"
                                         name="expiry_date"
-                                        value={product.expiry_date}
+                                        value={product.expiry_date ? product.expiry_date.split('T')[0] : ''}
                                         onChange={handleChange}
                                     />
                                 </div>
                                 <div className="col-12 col-md-6 mb-3">
                                     <label className="form-label text-muted">Category</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
+                                    <select
+                                        className="form-select"
                                         name="category"
                                         value={product.category}
                                         onChange={handleChange}
                                         required
-                                    />
+                                    >
+                                        <option value="">Select Category</option>
+                                        <option value="Food">Food</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Clothing">Clothing</option>
+                                        <option value="Pharmaceutical">Pharmaceutical</option>
+                                        <option value="Other">Other</option>
+                                    </select>
                                 </div>
                             </div>
 

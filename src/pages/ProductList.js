@@ -61,6 +61,14 @@ function ProductList() {
         return new Date(expiryDate) < today;
     };
 
+    // Format price in Leones
+    const formatPrice = (price) => {
+        return `SLL ${parseFloat(price).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })}`;
+    };
+
     if (loading) {
         return (
             <div className="d-flex">
@@ -129,7 +137,7 @@ function ProductList() {
                                                     )}
                                                 </h5>
                                                 <span className="badge bg-primary fs-6">
-                                                    ${parseFloat(product.price).toFixed(2)}
+                                                    {formatPrice(product.price)}
                                                 </span>
                                             </div>
 
@@ -191,7 +199,7 @@ function ProductList() {
                                     <tr>
                                         <th style={{ width: '15%' }}>Name</th>
                                         <th style={{ width: '25%' }}>Description</th>
-                                        <th style={{ width: '10%' }}>Price</th>
+                                        <th style={{ width: '10%' }}>Price (SLL)</th>
                                         <th style={{ width: '8%' }}>Qty</th>
                                         <th style={{ width: '12%' }}>Expiry Date</th>
                                         <th style={{ width: '10%' }}>Category</th>
@@ -208,7 +216,7 @@ function ProductList() {
                                                     {product.description}
                                                 </td>
                                                 <td className="fw-bold">
-                                                    ${parseFloat(product.price).toFixed(2)}
+                                                    {formatPrice(product.price)}
                                                 </td>
                                                 <td>{product.quantity}</td>
                                                 <td className={expired ? 'fw-bold text-danger' : ''}>

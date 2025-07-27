@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
-import { FiArrowLeft } from 'react-icons/fi'; // Using Feather icon for back button
+import { FiArrowLeft } from 'react-icons/fi';
 
 function ViewProduct() {
     const { id } = useParams();
@@ -25,191 +25,112 @@ function ViewProduct() {
         fetchProduct();
     }, [id]);
 
+    const formatCurrency = (amount) => {
+        return `SLL ${parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    };
+
     if (isLoading) return (
-        <div style={styles.loadingContainer}>
-            <div style={styles.loadingSpinner}></div>
-            <p>Loading product details...</p>
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+            <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3">Loading product details...</p>
         </div>
     );
 
-    if (!product) return <div style={styles.errorContainer}>Product not found</div>;
+    if (!product) return (
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+            <div className="alert alert-danger">Product not found</div>
+        </div>
+    );
 
     return (
-        <div style={styles.container}>
-            <div style={styles.card}>
-                <div style={styles.header}>
+        <div className="container py-4">
+            <div className="card shadow-sm">
+                <div className="card-header bg-light d-flex align-items-center py-3">
                     <button
                         onClick={() => navigate('/products')}
-                        style={styles.backButton}
+                        className="btn btn-sm btn-outline-secondary me-3"
                         title="Back to Products"
                     >
-                        <FiArrowLeft size={20} />
+                        <FiArrowLeft size={18} />
                     </button>
-                    <h2 style={styles.title}>Product Details</h2>
-                    <div style={styles.headerSpacer}></div> {/* For alignment */}
+                    <h2 className="mb-0 flex-grow-1 text-center">Product Details</h2>
                 </div>
 
-                <div style={styles.content}>
-                    <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>Product Name</span>
-                        <span style={styles.detailValue}>{product.name}</span>
-                    </div>
-
-                    <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>Description</span>
-                        <span style={styles.detailValue}>{product.description || '-'}</span>
-                    </div>
-
-                    <div style={styles.detailGrid}>
-                        <div style={styles.detailItem}>
-                            <span style={styles.detailLabel}>Price</span>
-                            <span style={styles.detailValue}>${parseFloat(product.price).toFixed(2)}</span>
+                <div className="card-body p-4">
+                    <div className="row mb-4">
+                        <div className="col-12 col-md-6 mb-3 mb-md-0">
+                            <h5 className="fw-bold">{product.name}</h5>
+                            <p className="text-muted">{product.description || 'No description available'}</p>
                         </div>
-
-                        <div style={styles.detailItem}>
-                            <span style={styles.detailLabel}>Quantity</span>
-                            <span style={styles.detailValue}>{product.quantity}</span>
-                        </div>
-
-                        <div style={styles.detailItem}>
-                            <span style={styles.detailLabel}>Expiry Date</span>
-                            <span style={styles.detailValue}>
-                                {product.expiry_date ? new Date(product.expiry_date).toLocaleDateString() : '-'}
+                        <div className="col-12 col-md-6">
+                            <span className={`badge ${product.available === 'Available' ? 'bg-success' : 'bg-danger'} fs-6`}>
+                                {product.available}
                             </span>
                         </div>
+                    </div>
 
-                        <div style={styles.detailItem}>
-                            <span style={styles.detailLabel}>Category</span>
-                            <span style={styles.detailValue}>{product.category}</span>
+                    <div className="row g-3">
+                        <div className="col-12 col-sm-6 col-md-3">
+                            <div className="p-3 border rounded">
+                                <h6 className="text-muted small">Price</h6>
+                                <h5 className="mb-0">{formatCurrency(product.price)}</h5>
+                            </div>
+                        </div>
+                        <div className="col-12 col-sm-6 col-md-3">
+                            <div className="p-3 border rounded">
+                                <h6 className="text-muted small">Quantity</h6>
+                                <h5 className="mb-0">{product.quantity}</h5>
+                            </div>
+                        </div>
+                        <div className="col-12 col-sm-6 col-md-3">
+                            <div className="p-3 border rounded">
+                                <h6 className="text-muted small">Category</h6>
+                                <h5 className="mb-0">{product.category || '-'}</h5>
+                            </div>
+                        </div>
+                        <div className="col-12 col-sm-6 col-md-3">
+                            <div className="p-3 border rounded">
+                                <h6 className="text-muted small">Expiry Date</h6>
+                                <h5 className="mb-0">
+                                    {product.expiry_date ? new Date(product.expiry_date).toLocaleDateString() : '-'}
+                                </h5>
+                            </div>
                         </div>
                     </div>
 
-                    <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>Status</span>
-                        <span style={{
-                            ...styles.statusBadge,
-                            backgroundColor: product.available === 'Available' ? '#e6ffed' : '#ffebeb',
-                            color: product.available === 'Available' ? '#1a7f37' : '#cf222e'
-                        }}>
-                            {product.available}
-                        </span>
+                    {/* Additional details can be added here */}
+                    <div className="mt-4 pt-3 border-top">
+                        <h6 className="text-muted mb-3">Additional Information</h6>
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <p><strong>Created At:</strong> {new Date(product.created_at).toLocaleString()}</p>
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <p><strong>Last Updated:</strong> {new Date(product.updated_at).toLocaleString()}</p>
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <div className="card-footer bg-light d-flex justify-content-end py-3">
+                    <button
+                        className="btn btn-primary me-2"
+                        onClick={() => navigate(`/products/edit/${id}`)}
+                    >
+                        Edit Product
+                    </button>
+                    <button
+                        className="btn btn-outline-secondary"
+                        onClick={() => navigate('/products')}
+                    >
+                        Back to List
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
-        padding: '20px',
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-    },
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        width: '100%',
-        maxWidth: '700px',
-        overflow: 'hidden',
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '20px 25px',
-        borderBottom: '1px solid #eaeaea',
-        position: 'relative',
-    },
-    backButton: {
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        color: '#4a5568',
-        padding: '8px',
-        borderRadius: '50%',
-        transition: 'all 0.2s ease',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        margin: 0,
-        color: '#2d3748',
-        fontSize: '20px',
-        fontWeight: '600',
-        position: 'absolute',
-        left: '50%',
-        transform: 'translateX(-50%)',
-    },
-    headerSpacer: {
-        width: '40px', // Matches the back button width for balance
-    },
-    content: {
-        padding: '25px',
-    },
-    detailGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-        gap: '20px',
-        margin: '20px 0',
-    },
-    detailItem: {
-        marginBottom: '18px',
-    },
-    detailLabel: {
-        display: 'block',
-        fontSize: '14px',
-        color: '#718096',
-        marginBottom: '6px',
-        fontWeight: '500',
-    },
-    detailValue: {
-        display: 'block',
-        fontSize: '16px',
-        color: '#2d3748',
-        fontWeight: '500',
-        padding: '8px 0',
-        borderBottom: '1px solid #edf2f7',
-    },
-    statusBadge: {
-        display: 'inline-block',
-        padding: '6px 12px',
-        borderRadius: '20px',
-        fontSize: '14px',
-        fontWeight: '600',
-    },
-    loadingContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        color: '#4a5568',
-    },
-    loadingSpinner: {
-        border: '4px solid rgba(0, 0, 0, 0.1)',
-        borderLeftColor: '#3182ce',
-        borderRadius: '50%',
-        width: '40px',
-        height: '40px',
-        animation: 'spin 1s linear infinite',
-        marginBottom: '20px',
-    },
-    errorContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        color: '#e53e3e',
-        fontSize: '18px',
-        fontWeight: '500',
-    },
-};
 
 export default ViewProduct;

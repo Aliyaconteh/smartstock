@@ -26,6 +26,10 @@ const PurchaseView = () => {
         fetchPurchase();
     }, [id]);
 
+    const formatCurrency = (amount) => {
+        return `SLL ${parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    };
+
     const exportToPDF = () => {
         if (!purchase) return;
 
@@ -52,9 +56,9 @@ const PurchaseView = () => {
         // Items table
         const items = purchase.items.map(item => [
             item.product_name,
-            `$${parseFloat(item.product_price).toFixed(2)}`,
+            formatCurrency(item.product_price),
             item.quantity,
-            `$${parseFloat(item.total_price).toFixed(2)}`
+            formatCurrency(item.total_price)
         ]);
 
         doc.autoTable({
@@ -72,7 +76,7 @@ const PurchaseView = () => {
         );
 
         doc.setFontSize(12);
-        doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 15, doc.lastAutoTable.finalY + 15);
+        doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, 15, doc.lastAutoTable.finalY + 15);
 
         // Footer
         doc.setFontSize(10);
@@ -84,7 +88,7 @@ const PurchaseView = () => {
 
     if (loading) {
         return (
-            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
                 <div className="text-center">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
@@ -97,7 +101,7 @@ const PurchaseView = () => {
 
     if (!purchase) {
         return (
-            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
                 <div className="alert alert-danger">
                     Failed to load purchase details. Please try again.
                 </div>
@@ -111,15 +115,15 @@ const PurchaseView = () => {
     );
 
     return (
-        <div className="container py-5">
+        <div className="container py-3 py-md-5">
             <div className="row justify-content-center">
-                <div className="col-lg-8">
+                <div className="col-12 col-lg-10 col-xl-8">
                     <div className="card border-0 shadow-sm" ref={receiptRef}>
-                        <div className="card-header bg-light d-flex justify-content-between align-items-center">
-                            <h4 className="mb-0">Purchase Receipt</h4>
-                            <div>
+                        <div className="card-header bg-light d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+                            <h4 className="mb-2 mb-md-0">Purchase Receipt</h4>
+                            <div className="d-flex flex-wrap justify-content-center gap-2">
                                 <button
-                                    className="btn btn-sm btn-outline-primary me-2"
+                                    className="btn btn-sm btn-outline-primary"
                                     onClick={exportToPDF}
                                 >
                                     <i className="bi bi-file-earmark-pdf me-1"></i> Export PDF
@@ -132,33 +136,33 @@ const PurchaseView = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="card-body">
+                        <div className="card-body p-3 p-md-4">
                             <div className="text-center mb-4">
-                                <img src={logo} alt="SmartStock Logo" style={{ height: '80px' }} />
+                                <img src={logo} alt="SmartStock Logo" style={{ height: '60px', maxWidth: '100%' }} />
                                 <h5 className="mt-3">SmartStock Purchase Receipt</h5>
                                 <p className="text-muted">Receipt #: {purchase.id}</p>
                             </div>
 
-                            <div className="row mb-4">
-                                <div className="col-md-6">
+                            <div className="row mb-4 g-3">
+                                <div className="col-12 col-md-6">
                                     <div className="border p-3 rounded">
                                         <h6 className="border-bottom pb-2">Customer Information</h6>
                                         <p className="mb-1"><strong>Name:</strong> {purchase.customer_name}</p>
                                         <p className="mb-0"><strong>Date:</strong> {new Date(purchase.purchase_date).toLocaleString()}</p>
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-12 col-md-6">
                                     <div className="border p-3 rounded">
                                         <h6 className="border-bottom pb-2">Purchase Summary</h6>
                                         <p className="mb-1"><strong>Items:</strong> {purchase.items?.length}</p>
-                                        <p className="mb-0"><strong>Total:</strong> ${totalAmount.toFixed(2)}</p>
+                                        <p className="mb-0"><strong>Total:</strong> {formatCurrency(totalAmount)}</p>
                                     </div>
                                 </div>
                             </div>
 
                             <h6 className="mb-3">Items Purchased</h6>
                             <div className="table-responsive">
-                                <table className="table table-bordered">
+                                <table className="table table-bordered mb-0">
                                     <thead className="table-light">
                                     <tr>
                                         <th>Product</th>
@@ -171,9 +175,9 @@ const PurchaseView = () => {
                                     {purchase.items?.map(item => (
                                         <tr key={item.id}>
                                             <td>{item.product_name}</td>
-                                            <td>${parseFloat(item.product_price).toFixed(2)}</td>
+                                            <td>{formatCurrency(item.product_price)}</td>
                                             <td>{item.quantity}</td>
-                                            <td>${parseFloat(item.total_price).toFixed(2)}</td>
+                                            <td>{formatCurrency(item.total_price)}</td>
                                         </tr>
                                     ))}
                                     </tbody>
@@ -181,23 +185,23 @@ const PurchaseView = () => {
                             </div>
 
                             <div className="d-flex justify-content-end mt-4">
-                                <div className="border-top pt-3" style={{ width: '300px' }}>
+                                <div className="border-top pt-3" style={{ maxWidth: '100%', width: '300px' }}>
                                     <div className="d-flex justify-content-between">
                                         <span className="fw-bold">Subtotal:</span>
-                                        <span>${totalAmount.toFixed(2)}</span>
+                                        <span>{formatCurrency(totalAmount)}</span>
                                     </div>
                                     <div className="d-flex justify-content-between">
                                         <span className="fw-bold">Tax:</span>
-                                        <span>$0.00</span>
+                                        <span>{formatCurrency(0)}</span>
                                     </div>
                                     <div className="d-flex justify-content-between mt-2">
                                         <span className="fw-bold fs-5">Total:</span>
-                                        <span className="fw-bold fs-5 text-success">${totalAmount.toFixed(2)}</span>
+                                        <span className="fw-bold fs-5 text-success">{formatCurrency(totalAmount)}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-5 pt-3 border-top text-center text-muted small">
+                            <div className="mt-4 mt-md-5 pt-3 border-top text-center text-muted small">
                                 <p>Thank you for your purchase!</p>
                                 <p className="mb-0">SmartStock Inventory System</p>
                             </div>

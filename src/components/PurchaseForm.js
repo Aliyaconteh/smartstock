@@ -7,6 +7,16 @@ function PurchaseForm() {
     const [products, setProducts] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [items, setItems] = useState([{ product: '', quantity: 1 }]);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkIfMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        return () => window.removeEventListener('resize', checkIfMobile);
+    }, []);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -62,11 +72,19 @@ function PurchaseForm() {
         }
     };
 
+    // Format price in Leones
+    const formatPrice = (price) => {
+        return `SLL ${parseFloat(price).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })}`;
+    };
+
     return (
         <div className="d-flex" style={{ fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif` }}>
             <Sidebar />
             <main className="container-fluid mt-3 mt-md-5 px-3 px-md-4" style={{
-                marginLeft: '0',
+                marginLeft: isMobile ? '0' : '220px',
                 transition: 'margin-left 0.3s',
                 width: '100%',
                 maxWidth: '100%'
@@ -106,7 +124,7 @@ function PurchaseForm() {
                                         <option value="">-- Select product --</option>
                                         {products.map((product) => (
                                             <option key={product.id} value={product.id}>
-                                                {product.name} (${product.price})
+                                                {product.name} ({formatPrice(product.price)})
                                             </option>
                                         ))}
                                     </select>

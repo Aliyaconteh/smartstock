@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createProduct } from '../api';
-import { FiPlusCircle, FiDollarSign, FiBox, FiCalendar, FiTag, FiArrowLeft } from 'react-icons/fi';
+import { FiPlusCircle, FiBox, FiCalendar, FiTag, FiArrowLeft } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
@@ -46,7 +46,7 @@ const AddProduct = () => {
                 expiry_date: '',
                 category: ''
             });
-            navigate('/products'); // Redirect after successful submission
+            navigate('/products');
         } catch (error) {
             console.error(error);
             alert('Failed to add product');
@@ -118,10 +118,10 @@ const AddProduct = () => {
 
                             <div className="row g-2 mb-3">
                                 <div className="col-12 col-md-6">
-                                    <label className="form-label fw-semibold">Price</label>
+                                    <label className="form-label fw-semibold">Price (SLL)</label>
                                     <div className="input-group">
                                         <span className="input-group-text bg-light">
-                                            <FiDollarSign className="text-muted" />
+                                            SLL
                                         </span>
                                         <input
                                             type="number"

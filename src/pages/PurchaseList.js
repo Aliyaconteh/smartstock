@@ -11,6 +11,14 @@ const PurchaseList = () => {
     const [isMobile, setIsMobile] = useState(false);
     const navigate = useNavigate();
 
+    // Format price in Leones
+    const formatPrice = (price) => {
+        return `SLL ${parseFloat(price).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })}`;
+    };
+
     // Check if mobile view
     useEffect(() => {
         const checkIfMobile = () => {
@@ -143,7 +151,7 @@ const PurchaseList = () => {
                                                     {purchase.customer_name}
                                                 </h5>
                                                 <span className="badge bg-primary fs-6">
-                                                    ${purchaseTotal.toFixed(2)}
+                                                    {formatPrice(purchaseTotal)}
                                                 </span>
                                             </div>
 
@@ -158,11 +166,11 @@ const PurchaseList = () => {
                                                         <div className="text-truncate" style={{ maxWidth: '150px' }}>
                                                             <strong className="d-block">{item.product_name}</strong>
                                                             <small className="text-muted">
-                                                                ${parseFloat(item.product_price).toFixed(2)} × {item.quantity}
+                                                                {formatPrice(item.product_price)} × {item.quantity}
                                                             </small>
                                                         </div>
                                                         <div className="text-end fw-bold">
-                                                            ${parseFloat(item.total_price).toFixed(2)}
+                                                            {formatPrice(item.total_price)}
                                                         </div>
                                                     </div>
                                                 ))}
@@ -229,7 +237,7 @@ const PurchaseList = () => {
                                                     <ul className="list-unstyled mb-0">
                                                         {purchase.items.map(item => (
                                                             <li key={item.id} className="small">
-                                                                ${parseFloat(item.product_price).toFixed(2)}
+                                                                {formatPrice(item.product_price)}
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -244,7 +252,7 @@ const PurchaseList = () => {
                                                     </ul>
                                                 </td>
                                                 <td className="fw-bold text-primary">
-                                                    ${purchaseTotal.toFixed(2)}
+                                                    {formatPrice(purchaseTotal)}
                                                 </td>
                                                 <td className="small text-muted">
                                                     {new Date(purchase.purchase_date).toLocaleDateString()}

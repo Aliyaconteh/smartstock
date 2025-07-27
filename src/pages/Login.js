@@ -31,12 +31,33 @@ function Login() {
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.card}>
+        <div style={{
+            ...styles.container,
+            padding: '20px',
+        }}>
+            <div style={{
+                ...styles.card,
+                width: '100%',
+                maxWidth: '380px',
+                padding: window.innerWidth <= 768 ? '25px' : '40px',
+            }}>
                 <div style={styles.logoContainer}>
-                    <img src={logo} alt="SmartStock Logo" style={styles.logo}/>
-                    <h2 style={styles.title}>SmartStock</h2>
-                    <p style={styles.subtitle}>Inventory Management System</p>
+                    <img
+                        src={logo}
+                        alt="SmartStock Logo"
+                        style={{
+                            ...styles.logo,
+                            height: window.innerWidth <= 768 ? '50px' : '60px'
+                        }}
+                    />
+                    <h2 style={{
+                        ...styles.title,
+                        fontSize: window.innerWidth <= 768 ? '20px' : '24px'
+                    }}>SmartStock</h2>
+                    <p style={{
+                        ...styles.subtitle,
+                        fontSize: window.innerWidth <= 768 ? '12px' : '14px'
+                    }}>Inventory Management System</p>
                 </div>
 
                 <form onSubmit={handleSubmit} style={styles.form}>
@@ -49,7 +70,10 @@ function Login() {
                             type="text"
                             value={username}
                             onChange={e => setUsername(e.target.value)}
-                            style={styles.input}
+                            style={{
+                                ...styles.input,
+                                padding: window.innerWidth <= 768 ? '10px 12px' : '12px 15px',
+                            }}
                             placeholder="Enter your username"
                             required
                         />
@@ -62,7 +86,10 @@ function Login() {
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            style={styles.input}
+                            style={{
+                                ...styles.input,
+                                padding: window.innerWidth <= 768 ? '10px 12px' : '12px 15px',
+                            }}
                             placeholder="Enter your password"
                             required
                         />
@@ -70,10 +97,19 @@ function Login() {
 
                     <button
                         type="submit"
-                        style={styles.button}
+                        style={{
+                            ...styles.button,
+                            padding: window.innerWidth <= 768 ? '12px' : '14px',
+                            fontSize: window.innerWidth <= 768 ? '14px' : '15px',
+                        }}
                         disabled={isLoading}
                     >
-                        {isLoading ? 'Logging in...' : 'Login'}
+                        {isLoading ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Logging in...
+                            </>
+                        ) : 'Login'}
                     </button>
                 </form>
             </div>
@@ -83,7 +119,7 @@ function Login() {
 
 const styles = {
     container: {
-        height: '100vh',
+        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -95,7 +131,6 @@ const styles = {
         backgroundColor: '#fff',
         borderRadius: '12px',
         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
-        width: '380px',
         padding: '40px',
         textAlign: 'center',
     },
@@ -142,10 +177,6 @@ const styles = {
         backgroundColor: '#f8fafc',
         boxSizing: 'border-box',
     },
-    inputFocus: {
-        borderColor: '#3182ce',
-        boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)',
-    },
     button: {
         width: '100%',
         padding: '14px',
@@ -158,10 +189,9 @@ const styles = {
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         marginTop: '10px',
-    },
-    buttonHover: {
-        backgroundColor: '#3182ce',
-        transform: 'translateY(-1px)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     error: {
         color: '#e53e3e',
